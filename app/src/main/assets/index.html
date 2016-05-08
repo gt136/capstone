@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script language="JavaScript">
+		function setMessage(arg) {
+			var mainFrame = document.getElementById('textMessageFromApp');
+			var createFrame = document.createElement("div");
+			createFrame.innerHTML = arg;
+			mainFrame.appendChild(createFrame);
+		}
+		function sendMessage(msg){
+			alert(msg);
+			window.androidBridge.setMessage(msg);
+		}
+		</script>
+		<style>
+			input {
+			position:absolute; top:100%; margin-top:-80px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<hr/>
+		<h2>WebView test</h2>
+		<hr/>
+		<br/>
+		Msg from app:
+		<p id="textMessageFromApp" style="height:200px; overflow-y:auto;"> </p>
+		<hr/>
+		<input type="text" id="textMessageToApp" value="send msg to app"/>
+		<input type="button" value="Send Message" onclick="sendMessage(document.getElementById('textMessageToApp').value)" style="left:50%;"/>
+	</body>
+</html>
