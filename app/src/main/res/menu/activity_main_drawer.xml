@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:title="Home" />
+            android:title="HOME" />
         <item
             android:id="@+id/nav_webview"
-            android:title="WebView" />
+            android:title="WEBVIEW" />
         <item
             android:id="@+id/nav_login_ex"
-            android:title="Login Ex" />
+            android:title="LOGIN/REGISTER" />
         <item
             android:id="@+id/nav_url"
             android:title="URL" />
         <item
             android:id="@+id/nav_fragment_test"
-            android:title="Fragment Test" />
+            android:title="FRAGMENT_TEST" />
     </group>
 
 
