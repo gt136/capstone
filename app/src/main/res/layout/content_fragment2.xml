@@ -14,4 +14,12 @@
         android:id="@+id/frag2_tv"
         android:text="tab2_frag"/>
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_marginTop="66dp"
+        android:layout_below="@+id/frag2_tv"
+        android:layout_alignEnd="@+id/frag2_tv" />
+
 </RelativeLayout>

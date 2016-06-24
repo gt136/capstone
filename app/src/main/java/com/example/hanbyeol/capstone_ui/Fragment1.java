@@ -31,7 +31,7 @@ public class Fragment1 extends Fragment {
         Log.d("T.T", "1");
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.main_tabs);
-
+       viewPager.setOffscreenPageLimit(6);
         Log.d("T.T", "2");
         tabLayout.setupWithViewPager(viewPager);
 
@@ -43,7 +43,7 @@ public class Fragment1 extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         //get information about tabs from server
         //make Fragments as number of categories
-        Vector<Fragment1_> vector = new Vector<Fragment1_>(3);
+        Vector<Fragment1_> vector = new Vector<Fragment1_>(5);
         // Adapter adapter = new Adapter(getChildFragmentManager());
         adapter = new Adapter(getFragmentManager());
         Bundle extra = getArguments();
