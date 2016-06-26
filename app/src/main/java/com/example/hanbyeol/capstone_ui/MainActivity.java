@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity
 
     DrawerLayout drawer;
     TabLayout tabLayout_bottom;
-    Vector json_number = new Vector();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //toolbar.setDisplayHomeAsUpEnabled(true);
 
-
-
         //Navigation Drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,6 +55,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //tabLayout_bottom = (TabLayout) findViewById(R.id.main_tabs_bottom);
+        //TabLayoutBottomEvent();
 
         new ReadJSONFeed().execute("http://52.74.198.10/a.php");
 
@@ -85,25 +85,26 @@ public class MainActivity extends AppCompatActivity
             //intent = new Intent(this, MainActivity.class);
             // startActivity(intent);
             drawer.closeDrawer(GravityCompat.START);
-        } else if (id == R.id.nav_webview) {
-            intent = new Intent(this, WebViewActivity.class);
+        } else if (id == R.id.nav_url) {
+            intent = new Intent(this, UrlActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+        } else if (id == R.id.nav_fragment_test) {
+            intent = new Intent(this, FragTestActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
         } else if (id == R.id.nav_login_ex) {
             intent = new Intent(this, LoginExActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
-        } else if (id == R.id.nav_url) {
-            intent = new Intent(this, UrlActivity.class);
+        } else if (id == R.id.nav_webview) {
+            intent = new Intent(this, WebViewActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
-        } else if (id == R.id.nav_fragment_test){
-
         }
 
         return true;
     }
-
 
     private class ReadJSONFeed extends AsyncTask<String, String, String> {
         protected void onPreExecute() {}
@@ -135,28 +136,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         protected void onPostExecute(String result) {
-            String state="";
             String stateInfo="";
-            //EditText stateName = (EditText) findViewById(R.id.state_name);
-            //String searchState=stateName.getText().toString();
+
             try{
                 JSONObject object = new JSONObject(result);
                 JSONArray countriesArray = new JSONArray(object.getString("band_menu"));
                 tabLayout_bottom = (TabLayout) findViewById(R.id.main_tabs_bottom);
 
-
-                //JSONArray countriesArray = new JSONArray(result);
                 for (int i =0 ; i<countriesArray.length();i++) {
                     JSONObject jObject = countriesArray.getJSONObject(i);
-
-                   /* if(searchState.equalsIgnoreCase(state))
-                    {
-                        stateInfo+="Capital: "+jObject.getString("capital")+"\n";
-                        stateInfo+="Latitude: "+jObject.getString("latitude")+"\n";
-                        stateInfo+="Longitude: "+jObject.getString("longitude")+"\n";
-                    }*/
-                    //tab_test+=jObject.getString("title");
-                    //json_number.addElement(new String(jObject.getString("title")));
                     stateInfo+="Title: "+jObject.getString("title")+"\n";
                     stateInfo+="Url: "+jObject.getString("url")+"\n";
                     vector.addElement(jObject.getString("title"));
@@ -164,22 +152,11 @@ public class MainActivity extends AppCompatActivity
                 }
                 TabLayoutBottomEvent();
                 for(int i =0; i<vector.size();i++)
-                tabLayout_bottom.addTab(tabLayout_bottom.newTab().setText(vector.elementAt(i)));
+                    tabLayout_bottom.addTab(tabLayout_bottom.newTab().setText(vector.elementAt(i)));
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
-
-
-
-            //tab1=(String)json_number.elementAt(1);
-
-         /*   TextView resp = (TextView) findViewById(R.id.frag3_tv);
-            if(stateInfo.trim().length() >0 )
-                resp.setText(stateInfo);
-            else
-                resp.setText("Sorry no match found");*/
-
 
         }
         private void TabLayoutBottomEvent() {
@@ -187,18 +164,13 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setCurrentTabFragment(tab.getPosition());
-                    Log.d("hi","select");
                 }
 
                 @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                    Log.d("hi","unselect");
-                }
+                public void onTabUnselected(TabLayout.Tab tab) { }
 
                 @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                    Log.d("hi","reselect");
-                }
+                public void onTabReselected(TabLayout.Tab tab) { }
             });
         }
 
@@ -223,9 +195,13 @@ public class MainActivity extends AppCompatActivity
 
             switch (tabPosition) {
                 case 0 :
+                    Log.d("test", "1");
                     ft.replace(R.id.fragment_part_test, frag1);
+                    Log.d("test", "2");
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    Log.d("test", "3");
                     ft.commit();
+                    Log.d("test", "4");
                     break;
                 case 1 :
                     ft.replace(R.id.fragment_part_test, frag2);
@@ -243,12 +219,10 @@ public class MainActivity extends AppCompatActivity
                     ft.commit();
                     break;
                 default:
-                    Log.d("hi", "default");
                     break;
             }
         }
     }
 
 }
-
 

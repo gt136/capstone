@@ -11,16 +11,10 @@
         android:paddingRight="5px"
         android:orientation="vertical">
 
-
-
         <TextView
             android:id="@+id/url_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="received msg: \n" />
-
-
-
     </LinearLayout>
-
 </ScrollView>

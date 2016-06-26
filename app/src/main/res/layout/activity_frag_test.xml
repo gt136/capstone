@@ -6,20 +6,21 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.hanbyeol.capstone_ui.Fragment2">
+    tools:context="com.example.hanbyeol.capstone_ui.FragTestActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/frag2_replace"
+        android:id="@+id/fragment_replace"
         android:orientation="horizontal">
 
         <WebView
-            android:layout_width="match_parent"
+            android:layout_width ="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/frag2_webview"/>
+            android:id="@+id/frag_test_webview"/>
 
     </FrameLayout>
 
 
 </RelativeLayout>
+

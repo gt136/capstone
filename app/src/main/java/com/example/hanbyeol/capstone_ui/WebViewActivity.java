@@ -1,9 +1,8 @@
 package com.example.hanbyeol.capstone_ui;
 
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -16,9 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-
-
-public class WebViewActivity extends Activity {
+public class WebViewActivity extends AppCompatActivity {
 
     private EditText editTextName;
     private EditText editTextAdd;
@@ -32,7 +29,6 @@ public class WebViewActivity extends Activity {
         editTextName = (EditText) findViewById(R.id.name);
         editTextAdd = (EditText) findViewById(R.id.address);
 
-
     }
 
     public void insert(View view){
@@ -40,16 +36,12 @@ public class WebViewActivity extends Activity {
         String address = editTextAdd.getText().toString();
 
         insertToDatabase(name, address);
-
-
     }
 
     private void insertToDatabase(String name, String address){
 
-        class InsertData extends AsyncTask<String, Void, String>{
+        class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
-
-
 
             @Override
             protected void onPreExecute() {
@@ -61,7 +53,7 @@ public class WebViewActivity extends Activity {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -100,7 +92,6 @@ public class WebViewActivity extends Activity {
                 catch(Exception e){
                     return new String("Exception: " + e.getMessage());
                 }
-
             }
         }
 

@@ -37,18 +37,27 @@
             android:name=".Fragment3"
             android:label="@string/title_activity_fragment3"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".WebViewActivity"
-            android:label="@string/title_activity_web_view"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".LoginExActivity"
-            android:label="@string/title_activity_login_ex" />
         <activity android:name=".UrlActivity" />
         <activity
             android:name=".Fragment1_"
             android:label="@string/title_activity_fragment1_"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".FragTestActivity"
+            android:label="@string/title_activity_frag_test"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".WebViewFragment" />
+        <activity android:name=".UrlActivity" />
+        <activity android:name=".WebViewActivity" />
+        <activity android:name=".LoginExActivity"></activity>
     </application>
 
 </manifest>

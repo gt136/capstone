@@ -1,10 +1,10 @@
 package com.example.hanbyeol.capstone_ui;
 
-import android.app.Activity;
 import android.app.LauncherActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,9 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class UrlActivity extends Activity {
-
-
+public class UrlActivity extends AppCompatActivity {
     ImageView imView;
     TextView txtView;
 
@@ -43,18 +41,9 @@ public class UrlActivity extends Activity {
         //imView = (ImageView) findViewById(R.id.imageView1);
 
         task.execute("http://52.74.198.10/d.php");
-
-
-
-
-
     }
 
-
-    private class back extends AsyncTask<String, Integer,Bitmap>{
-
-
-
+    private class back extends AsyncTask<String, Integer,Bitmap> {
         @Override
         protected Bitmap doInBackground(String... urls) {
             // TODO Auto-generated method stub
@@ -81,8 +70,6 @@ public class UrlActivity extends Activity {
 
     }
     private class phpDown extends AsyncTask<String, Integer,String>{
-
-
 
         @Override
         protected String doInBackground(String... urls) {
@@ -142,13 +129,9 @@ public class UrlActivity extends Activity {
             for(int i =0; i<vector.size();i++)
                 txt2=txt2+"name: "+vector.elementAt(i)+" address: "+vector2.elementAt(i)+"\n";
 
-
             txtView.setText(txt2);
         }
 
-
     }
-
-
 
 }
