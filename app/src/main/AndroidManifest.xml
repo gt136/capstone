@@ -51,7 +51,7 @@
             android:name=".Fragment1_"
             android:label="@string/title_activity_fragment1_"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-
+        <activity android:name=".FragTestActivity" />
         <activity android:name=".WebViewFragment" />
 
     </application>

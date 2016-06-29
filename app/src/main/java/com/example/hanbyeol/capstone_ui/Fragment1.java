@@ -24,7 +24,7 @@ public class Fragment1 extends Fragment {
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
-        //viewPager.setOffscreenPageLimit(6);
+        viewPager.setOffscreenPageLimit(6);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
