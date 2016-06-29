@@ -1,12 +1,16 @@
 package com.example.hanbyeol.capstone_ui;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -34,14 +38,51 @@ public class Fragment1_ extends Fragment {
         mWebSettings.setSaveFormData(false);
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         // mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-
+mWebSettings.setJavaScriptEnabled(true);
         mWebView.setWebViewClient(new MyWebClient());
+        final Context myApp = this.getContext();
+
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
+                new AlertDialog.Builder(myApp)
+                        .setTitle("Alert title")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok,
+                                new AlertDialog.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        result.confirm();
+                                    }
+                                })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+                return true;
+            }
+        });
 
         Log.d("test", "in fragment1_");
 
         Bundle extra = getArguments();
         String url = extra.getString("url");
         mWebView.loadUrl(url);
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+            public void onPageStarted(WebView view, String url,
+                                      android.graphics.Bitmap favicon) {
+                super.onPageStarted(view, url, favicon); //페이지 로딩 시작
+                CLoading.showLoading(myApp);
+            };
+            public void onPageFinished(WebView view, String url) { //페이지 로딩 완료
+                super.onPageFinished(view, url);
+                CLoading.hideLoading();
+            };
+        });
+            ;
 
         /*if(savedInstanceState == null){
             mWebView.setWebViewClient(new MyWebClient());
@@ -53,12 +94,12 @@ public class Fragment1_ extends Fragment {
             mWebView.loadUrl(curURL);
             Log.d("temp2:", curURL);
         }*/
-        //mWebView.addJavascriptInterface(new AndroidBridge(), "androidBridge");
+            //mWebView.addJavascriptInterface(new AndroidBridge(), "androidBridge");
 
-        return view;
-    }
+            return view;
+        }
 
-    @Override
+        @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         mWebView.saveState(outState);

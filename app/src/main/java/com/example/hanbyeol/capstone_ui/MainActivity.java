@@ -1,5 +1,6 @@
 package com.example.hanbyeol.capstone_ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,12 +38,16 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     TabLayout tabLayout_bottom;
     Adapter adapter;
-    ViewPager viewPager;
+    CustomViewPager viewPager;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewPager = (ViewPager) findViewById(R.id.fragment_part_test);
+        context = this;
+
+
+        viewPager = (CustomViewPager) findViewById(R.id.fragment_part_test);
         //Tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
