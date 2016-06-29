@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         //tabLayout_bottom = (TabLayout) findViewById(R.id.main_tabs_bottom);
         //TabLayoutBottomEvent();
 
-        new ReadJSONFeed().execute("http://52.74.198.10/a.php");
+        new ReadJSONFeed().execute("http://itaxi.handong.edu/init.php");
 
     }
 
