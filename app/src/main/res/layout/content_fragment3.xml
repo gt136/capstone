@@ -11,7 +11,34 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/frag3_tv"
-        android:text="tab3_frag"/>
+        android:id="@+id/frag3_put_id"
+        android:text="PUT YOUR ID"
+        android:layout_above="@+id/editText2"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="44dp"
+        android:layout_marginBottom="58dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_alignTop="@+id/frag3_put_id"
+        android:layout_alignStart="@+id/editText2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frag3_put_pw"
+        android:text="PUT YOUR PW"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/frag3_put_id" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:id="@+id/editText2"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/frag3_put_pw" />
 
 </RelativeLayout>

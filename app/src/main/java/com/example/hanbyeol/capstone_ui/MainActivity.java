@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
         //tabLayout_bottom = (TabLayout) findViewById(R.id.main_tabs_bottom);
         //TabLayoutBottomEvent();
 
-        new ReadJSONFeed().execute("http://52.74.198.10/a.php");
+        new ReadJSONFeed().execute("http://itaxi.handong.edu/init.php");
 
     }
 
@@ -198,13 +198,9 @@ public class MainActivity extends AppCompatActivity
 
             switch (tabPosition) {
                 case 0 :
-                    Log.d("test", "1");
                     ft.replace(R.id.fragment_part_test, frag1);
-                    Log.d("test", "2");
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    Log.d("test", "3");
                     ft.commit();
-                    Log.d("test", "4");
                     break;
                 case 1 :
                     ft.replace(R.id.fragment_part_test, frag2);
@@ -228,7 +224,6 @@ public class MainActivity extends AppCompatActivity
         private void setupViewPager(ViewPager viewPager) {
             //get information about tabs from server
             //make Fragments as number of categories
-
 
             adapter = new Adapter(getSupportFragmentManager());
             frag1 = new Fragment1();

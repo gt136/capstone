@@ -20,8 +20,6 @@ public class FragTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frag_test);
 
-        Log.d("in FragTest Activity", "after serContentView");
-
         mWebView = (WebView) findViewById(R.id.frag_test_webview);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new AndroidBridge(), "androidBridge_frag_test");
