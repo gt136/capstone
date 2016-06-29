@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,12 +36,13 @@ public class MainActivity extends AppCompatActivity
 
     DrawerLayout drawer;
     TabLayout tabLayout_bottom;
-
+    Adapter adapter;
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        viewPager = (ViewPager) findViewById(R.id.fragment_part_test);
         //Tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
@@ -150,9 +152,10 @@ public class MainActivity extends AppCompatActivity
                     vector.addElement(jObject.getString("title"));
                     vector2.addElement(jObject.getString("url"));
                 }
-                TabLayoutBottomEvent();
-                for(int i =0; i<vector.size();i++)
-                    tabLayout_bottom.addTab(tabLayout_bottom.newTab().setText(vector.elementAt(i)));
+                setupViewPager(viewPager);
+                viewPager.setOffscreenPageLimit(6);
+                tabLayout_bottom.setupWithViewPager(viewPager);
+
             }
             catch (JSONException e) {
                 e.printStackTrace();
@@ -221,6 +224,34 @@ public class MainActivity extends AppCompatActivity
                 default:
                     break;
             }
+        }
+        private void setupViewPager(ViewPager viewPager) {
+            //get information about tabs from server
+            //make Fragments as number of categories
+
+
+            adapter = new Adapter(getSupportFragmentManager());
+            frag1 = new Fragment1();
+            Bundle bundle = new Bundle();
+
+            String[] title = new String[vector.size()];
+            title = (String[])vector.toArray(title);
+            String[] url = new String[vector2.size()];
+            url = (String[])vector2.toArray(url);
+
+            bundle.putStringArray("title",title);
+            bundle.putStringArray("url",url);
+            frag1.setArguments(bundle);
+            Fragment2 frag2 = new Fragment2();
+            Fragment3 frag3 = new Fragment3();
+            Fragment4 frag4 = new Fragment4();
+            adapter.addFragment(frag1, "1");
+            adapter.addFragment(frag2, "2");
+            adapter.addFragment(frag3, "3");
+            adapter.addFragment(frag4, "4");
+
+            viewPager.setAdapter(adapter);
+            Log.d("test", "in fragment1, 3");
         }
     }
 
