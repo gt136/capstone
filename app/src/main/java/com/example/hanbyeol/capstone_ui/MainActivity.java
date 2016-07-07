@@ -108,6 +108,10 @@ public class MainActivity extends AppCompatActivity
             intent = new Intent(this, WebViewActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+        }else if (id == R.id.app_login) {
+            intent = new Intent(this, Login.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
         }
 
         return true;
