@@ -1,10 +1,12 @@
 package com.example.hanbyeol.capstone_ui;
 
 import android.app.AlertDialog;
-import android.content.Intent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
@@ -35,11 +37,15 @@ public class Login extends AppCompatActivity {
     private EditText editTextName;
     private EditText editTextPass;
     private Button btnLogin;
+    private Button btnLogout;
+    private Context context;
     private String result;
     final CookieManager cookieManager = CookieManager.getInstance();
     final String url = "http://www.cconmausa.com/member/login_handle.php";
     final String url2 = "http://www.cconmausa.com/";
     final HttpClient http = new DefaultHttpClient();
+    private String name ;
+    private String pass ;
     /*final ResponseHandler<String> responseHandler= new ResponseHandler<String>() {
         @Override
         public String handleResponse(HttpResponse response)  throws ClientProtocolException, IOException {
@@ -75,8 +81,8 @@ public class Login extends AppCompatActivity {
                     Thread.sleep(500);  //동기화 하는데 약간의 시간을 필요로 한다.
                 } catch (InterruptedException e) {   }
 
-                Intent intent = new Intent(Login.this, LoginWebView.class);
-                startActivity(intent);
+                //Intent intent = new Intent(Login.this, LoginWebView.class);
+                //startActivity(intent);
                 finish();
 
 
@@ -91,7 +97,10 @@ public class Login extends AppCompatActivity {
         editTextName = (EditText) findViewById(R.id.id);
         editTextPass = (EditText) findViewById(R.id.pass);
         btnLogin = (Button)findViewById(R.id.login_button);
+        btnLogout = (Button)findViewById(R.id.logout_button);
+        context = this;
         CookieSyncManager.createInstance(this);
+
         CookieManager.getInstance().removeAllCookie();
         CookieSyncManager.getInstance().startSync();
 
@@ -99,29 +108,72 @@ public class Login extends AppCompatActivity {
                 this);
 
 // 제목셋팅
-        alertDialogBuilder.setTitle("프로그램 종료");
+
 
 // AlertDialog 셋팅
+        btnLogin.setOnClickListener(new Button.OnClickListener() {
 
-
-        new Thread() {
             @Override
-            public void run() {
-                try {
-                    // 서버에 전달할 파라메터 세팅
-                    ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                    nameValuePairs.add(new BasicNameValuePair("id", "gt13579"));
-                    nameValuePairs.add(new BasicNameValuePair("passwd", "olmang0220"));
-                    HttpParams params = http.getParams();
-                    HttpConnectionParams.setConnectionTimeout(params, 5000);
-                    HttpConnectionParams.setSoTimeout(params, 5000);
-                    HttpPost httpPost = new HttpPost(url);
-                    UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-                    httpPost.setEntity(entityRequest);
-                    http.execute(httpPost,responseHandler);
-                }catch(Exception e){}
+            public void onClick(View v) {
+
+                name = editTextName.getText().toString();
+                pass = editTextPass.getText().toString();
+                Log.d("click_name",name);
+                Log.d("click_pass",pass);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            // 서버에 전달할 파라메터 세팅
+                            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                            nameValuePairs.add(new BasicNameValuePair("id", name));
+                            nameValuePairs.add(new BasicNameValuePair("passwd", pass));
+                            Log.d("cookie_name", name);
+                            Log.d("cookie_pass", pass);
+                            HttpParams params = http.getParams();
+                            HttpConnectionParams.setConnectionTimeout(params, 5000);
+                            HttpConnectionParams.setSoTimeout(params, 5000);
+                            HttpPost httpPost = new HttpPost(url);
+                            UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+                            httpPost.setEntity(entityRequest);
+                            http.execute(httpPost,responseHandler);
+                        }catch(Exception e){}
+                    }
+                }.start();
             }
-        }.start();
+        });
+btnLogout.setOnClickListener(new Button.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        CookieSyncManager.createInstance(context);
+        CookieManager.getInstance().removeAllCookie();
+        CookieSyncManager.getInstance().startSync();
+        alertDialogBuilder
+                .setMessage("로그아웃되었습니다.")
+                .setCancelable(false)
+                .setPositiveButton("확인",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(
+                                    DialogInterface dialog, int id) {
+                                // 프로그램을 종료한다
+                                dialog.cancel();
+                            }
+                        })
+                .setNegativeButton("취소",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(
+                                    DialogInterface dialog, int id) {
+                                // 다이얼로그를 취소한다
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // 다이얼로그 보여주기
+        alertDialog.show();
+    }
+});
+
     }
 
 
