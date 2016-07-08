@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
@@ -66,6 +67,7 @@ public class Login extends AppCompatActivity {
                     for (int i = 0; i < cookies.size(); i++) {
                         String cookieString = cookies.get(i).getName() + "=" + cookies.get(i).getValue();
                         cookieManager.setCookie(url2, cookieString);
+                        Log.d("cookie", cookieString);
                     }
                 }
                 CookieSyncManager.getInstance().sync();

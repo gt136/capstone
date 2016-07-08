@@ -39,7 +39,7 @@ public class Fragment1_ extends Fragment {
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         // mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 mWebSettings.setJavaScriptEnabled(true);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
         mWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         mWebView.setWebViewClient(new MyWebClient());
         final Context myApp = this.getContext();
