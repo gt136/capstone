@@ -28,9 +28,13 @@ public class Fragment1_ extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.content_fragment1_, container, false);
+        String userAgent = System.getProperty("http.agent");
 
+        Log.d("userAgent",userAgent);
         mWebView = (WebView) view.findViewById(R.id.frag1_webview);
         mWebSettings = mWebView.getSettings();
+        String userAgent2 = mWebSettings.getUserAgentString();
+        Log.d("userAgent2",userAgent2);
         mWebSettings.setBuiltInZoomControls(true);
         mWebSettings.setSupportZoom(true);
         mWebSettings.setUseWideViewPort(true);
