@@ -1,363 +1,315 @@
 package com.example.hanbyeol.capstone_ui;
-
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.READ_CONTACTS;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
-/**
- * A login screen that offers login via email/password.
- */
-public class LoginExActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.webkit.CookieSyncManager;
+import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
+public class LoginExActivity extends AppCompatActivity {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private UserLoginTask mAuthTask = null;
+    private String UserID, UserPW; // 아이디 와 패스워드를 저장
+    EditText EtID, EtPW;         // 패스워드를 입력
+    Button BtnLogin, BtnLogout;       // Login버튼 처리
+    private WebView Webv;
+    String sfName = "LoginFile";
 
-    // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    public CookieManager cookieManager;
+    public CookieSyncManager cookieSyncManager;
+    public DefaultHttpClient httpclient = new DefaultHttpClient();
+    public String domain = "http://www.cconmausa.com";
 
+    @SuppressWarnings("deprecation")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_ex);
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        EtID = (EditText) findViewById(R.id.editID); // ID입력 공간
+        EtPW = (EditText) findViewById(R.id.editPW); // 패스워드 입력 공간
+
+        BtnLogin = (Button) findViewById(R.id.btnLogin);
+        BtnLogout = (Button) findViewById(R.id.btnLogout);
+
+        Webv = (WebView) findViewById(R.id.imageView1);
+        Webv.getSettings().setJavaScriptEnabled(true);
+        Webv.getSettings().setDomStorageEnabled(true);
+        Webv.getSettings().setUseWideViewPort(true);
+
+        final Context myApp = this;
+
+        Webv.setWebChromeClient(new WebChromeClient() {
             @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+            public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
+                new AlertDialog.Builder(myApp).setTitle("AlertDialog").setMessage(message).setPositiveButton(android.R.string.ok,
+                        new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                result.confirm();
+                            }
+                        }).setCancelable(false).create().show();
+                return true;
+            }
+
+            public boolean onJsConfirm(WebView view, String url,
+                                       String message, final android.webkit.JsResult result) {
+                new AlertDialog.Builder(myApp)
+                        .setTitle("Concierge")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok,
+                                new AlertDialog.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        result.confirm();
+                                    }
+                                })
+                        .setNegativeButton(android.R.string.cancel,
+                                new AlertDialog.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        result.cancel();
+                                    }
+                                }).setCancelable(false).create().show();
+                return true;
+            }
+        });
+//        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+//        final String tmDevice = "" + tm.getDeviceId();
+//        StringBuffer userAgent = new StringBuffer(Webv.getSettings().getUserAgentString());
+//        userAgent.append(";" + tmDevice);
+//        Webv.getSettings().setUserAgentString(userAgent.toString());
+
+        SharedPreferences sf = getSharedPreferences(sfName, 0);
+        EtID.setText(sf.getString("name", ""));
+        //EtPW.setText(sf.getString("passwd", ""));
+
+        try{
+            if(cookieManager == null) {
+                cookieSyncManager.createInstance(this);
+                cookieManager = CookieManager.getInstance();
+            } else
+                cookieManager.removeAllCookie();
+            cookieSyncManager.getInstance().startSync();
+            Thread.sleep(500);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Webv.loadUrl(domain);
+        Webv.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
+        BtnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                attemptLogin();
+                UserID = EtID.getText().toString(); // EtPw에 입력한 텍스트를 ID에 넣음
+                UserPW = EtPW.getText().toString(); // EtPW에 입력한 텍스트를 PW에 넣음
+                new Login().execute(); //로그인 함수 호출
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-    }
+        BtnLogout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Webv.clearHistory();
+                Webv.clearCache(true);
+                Webv.clearView();
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
+                cookieSyncManager = CookieSyncManager.getInstance();
+                cookieManager = CookieManager.getInstance();
+                cookieManager.setAcceptCookie(true);
+                cookieManager.removeSessionCookie();
+                cookieSyncManager.sync();
 
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
+                Webv.reload();
             }
+        });
+
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (CookieSyncManager.getInstance() != null) {
+            CookieSyncManager.getInstance().stopSync();
         }
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CookieSyncManager.getInstance().startSync();
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences sf = getSharedPreferences(sfName, 0);
+        SharedPreferences.Editor editor = sf.edit();
+        editor.putString("name", UserID);
+        editor.putString("passwd", UserPW);
+        editor.commit();
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
+//    @SuppressWarnings("deprecation")
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        if (cookieManager != null) {
+//            cookieManager.removeAllCookie();
+//        }
+//    }
 
-        addEmailsToAutoComplete(emails);
-    }
+    class Login extends AsyncTask<String, String, String> {
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginExActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
+        HttpEntity entity;
+        BasicResponseHandler myHandler = new BasicResponseHandler();
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        protected void onPreExecute(){
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        protected String doInBackground(String... str){
 
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                List<NameValuePair> qparams = new ArrayList<NameValuePair>();
+                qparams.add(new BasicNameValuePair("id", UserID));
+                qparams.add(new BasicNameValuePair("passwd", UserPW));
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                JSONObject json = new JSONObject();
+                json.put("id", UserID);
+                json.put("passwd", UserPW);
+
+                // 네트워크 연결 시간이 지연될경우
+                HttpParams params = httpclient.getParams();
+                HttpConnectionParams.setConnectionTimeout(params, 10000);
+                HttpConnectionParams.setSoTimeout(params, 10000);
+
+                //Post 로그인 사이트
+                UrlEncodedFormEntity Urlentity = new UrlEncodedFormEntity(qparams, "UTF-8");
+                //StringEntity se = new StringEntity(json.toString());
+                HttpPost httppost = new HttpPost(domain + "/member/login_handle.php");
+                httppost.setEntity(Urlentity);
+                //httppost.setEntity(se);
+
+                HttpResponse response = httpclient.execute(httppost);
+                entity = response.getEntity();
+                final String content = EntityUtils.toString(entity);
+
+//                Header[] headers = response.getHeaders("Set-Cookie");
+//                //Header[] headers = response.getAllHeaders();
+//                cookieManager = CookieManager.getInstance();
+//                if(headers.length>0) {
+//                    //HttpUtil.PHPSESSID = headers[0].getValue();
+//                        for(Header h : headers){
+//                            String cookieString = h.getName() + "=" + h.getValue();
+//                            cookieManager.setCookie(domain, cookieString);
+//                            CookieSyncManager.getInstance().sync();
+//                            Log.d("test", ": " + cookieString);
+//                        }
+//                }
+
+
+                List<Cookie> cookies = ((DefaultHttpClient)httpclient).getCookieStore().getCookies();
+                cookieManager = CookieManager.getInstance();
+                if(!cookies.isEmpty()){
+                    for(int i= 0; i < cookies.size(); i++){
+                        String cookieString = cookies.get(i).getName() + "=" + cookies.get(i).getValue();
+                        cookieManager.setCookie(domain, cookieString);
+                        CookieSyncManager.getInstance().sync();
+                        Log.d("cookies", " " + cookieString);
+                    }
                 }
+
+                Thread.sleep(500);
+
+                if (entity != null) {
+                    Log.d("LOG", "entity != null");
+                    return content;
+                }
+                else {
+                    Log.d("LOG", "entity == null");
+                }
+
+            }catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
-            // TODO: register the new account here.
-            return true;
+            return "";
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-            Intent intent;
-
-            if (success) {
-               // finish();
-                intent = new Intent(LoginExActivity.this, FragTestActivity.class);
-                startActivity(intent);
-
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+        protected void onPostExecute(final String str) {
+            // final Context myApp = this.getContext();
+            if(entity != null) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("LOG", "before webview load ");
+                        Log.d("LOG", "content= " + str);
+                        //Webv.loadData(content, "text/html; charset=utf-8", "UTF-8");
+                        Webv.loadUrl(domain);
+                        Webv.setWebViewClient(new WebViewClient() {
+                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                view.loadUrl(url);
+                                return true;
+                            }
+                        });
+                        //Webv.reload();
+                    }
+                });
             }
+            httpclient.getConnectionManager().shutdown();
         }
+    }
 
+    private class DraptWebViewClient extends WebViewClient {
         @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+        public void onFormResubmission(WebView view, Message dontResend, Message resend) {
+            resend.sendToTarget();
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        LoginExActivity.this.finish();
-        overridePendingTransition(R.anim.anim_hold, R.anim.anim_slide_out_to_right);
-
-        return false;
-    }
 }
-
