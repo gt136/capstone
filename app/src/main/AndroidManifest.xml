@@ -3,6 +3,7 @@
     package="com.example.hanbyeol.capstone_ui">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -13,9 +14,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true"
         >
         <activity
             android:name=".MainActivity"
@@ -53,6 +54,8 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".FragTestActivity" />
         <activity android:name=".WebViewFragment" />
+        <activity android:name=".Login" />
+        <activity android:name=".LoginWebView" />
 
     </application>
 

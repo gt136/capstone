@@ -21,9 +21,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -36,6 +39,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginExActivity extends AppCompatActivity {
 
@@ -53,112 +57,160 @@ public class LoginExActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_ex);
 
-        EtID = (EditText) findViewById(R.id.editID); // ID입력 공간
-        EtPW = (EditText) findViewById(R.id.editPW); // 패스워드 입력 공간
-
-        BtnLogin = (Button) findViewById(R.id.btnLogin);
-        BtnLogout = (Button) findViewById(R.id.btnLogout);
-
-        Webv = (WebView) findViewById(R.id.imageView1);
-        Webv.getSettings().setJavaScriptEnabled(true);
-        Webv.getSettings().setDomStorageEnabled(true);
-        Webv.getSettings().setUseWideViewPort(true);
-
-        final Context myApp = this;
-
-        Webv.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
-                new AlertDialog.Builder(myApp).setTitle("AlertDialog").setMessage(message).setPositiveButton(android.R.string.ok,
-                        new AlertDialog.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                result.confirm();
-                            }
-                        }).setCancelable(false).create().show();
-                return true;
-            }
-
-            public boolean onJsConfirm(WebView view, String url,
-                                       String message, final android.webkit.JsResult result) {
-                new AlertDialog.Builder(myApp)
-                        .setTitle("Concierge")
-                        .setMessage(message)
-                        .setPositiveButton(android.R.string.ok,
-                                new AlertDialog.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog,
-                                            int which) {
-                                        result.confirm();
-                                    }
-                                })
-                        .setNegativeButton(android.R.string.cancel,
-                                new AlertDialog.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog,
-                                            int which) {
-                                        result.cancel();
-                                    }
-                                }).setCancelable(false).create().show();
-                return true;
-            }
-        });
-//        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-//        final String tmDevice = "" + tm.getDeviceId();
-//        StringBuffer userAgent = new StringBuffer(Webv.getSettings().getUserAgentString());
-//        userAgent.append(";" + tmDevice);
-//        Webv.getSettings().setUserAgentString(userAgent.toString());
-
-        SharedPreferences sf = getSharedPreferences(sfName, 0);
-        EtID.setText(sf.getString("name", ""));
-        //EtPW.setText(sf.getString("passwd", ""));
-
-        try{
-            if(cookieManager == null) {
+        try {
+            if (cookieManager == null) {
                 cookieSyncManager.createInstance(this);
                 cookieManager = CookieManager.getInstance();
             } else
                 cookieManager.removeAllCookie();
             cookieSyncManager.getInstance().startSync();
             Thread.sleep(500);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        Webv.loadUrl(domain);
-        Webv.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
+        if (isOnline() == true) {
 
-        BtnLogin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                UserID = EtID.getText().toString(); // EtPw에 입력한 텍스트를 ID에 넣음
-                UserPW = EtPW.getText().toString(); // EtPW에 입력한 텍스트를 PW에 넣음
-                new Login().execute(); //로그인 함수 호출
-            }
-        });
+            setContentView(R.layout.activity_login_ex);
 
-        BtnLogout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Webv.clearHistory();
-                Webv.clearCache(true);
-                Webv.clearView();
+            EtID = (EditText) findViewById(R.id.editID); // ID입력 공간
+            EtPW = (EditText) findViewById(R.id.editPW); // 패스워드 입력 공간
 
-                cookieSyncManager = CookieSyncManager.getInstance();
-                cookieManager = CookieManager.getInstance();
-                cookieManager.setAcceptCookie(true);
-                cookieManager.removeSessionCookie();
-                cookieSyncManager.sync();
+            BtnLogin = (Button) findViewById(R.id.btnLogin);
+            BtnLogout = (Button) findViewById(R.id.btnLogout);
 
-                Webv.reload();
-            }
-        });
+            Webv = (WebView) findViewById(R.id.imageView1);
+            Webv.getSettings().setJavaScriptEnabled(true);
+            Webv.getSettings().setDomStorageEnabled(true);
+            Webv.getSettings().setUseWideViewPort(true);
+
+            final Context myApp = this;
+
+            Webv.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
+                    new AlertDialog.Builder(myApp).setTitle("AlertDialog").setMessage(message).setPositiveButton(android.R.string.ok,
+                            new AlertDialog.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    result.confirm();
+                                }
+                            }).setCancelable(false).create().show();
+                    return true;
+                }
+
+                public boolean onJsConfirm(WebView view, String url,
+                                           String message, final android.webkit.JsResult result) {
+                    new AlertDialog.Builder(myApp)
+                            .setTitle("Concierge")
+                            .setMessage(message)
+                            .setPositiveButton(android.R.string.ok,
+                                    new AlertDialog.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which) {
+                                            result.confirm();
+                                        }
+                                    })
+                            .setNegativeButton(android.R.string.cancel,
+                                    new AlertDialog.OnClickListener() {
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which) {
+                                            result.cancel();
+                                        }
+                                    }).setCancelable(false).create().show();
+                    return true;
+                }
+            });
+
+
+//        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+//        final String tmDevice = "" + tm.getDeviceId();
+//        StringBuffer userAgent = new StringBuffer(Webv.getSettings().getUserAgentString());
+//        userAgent.append(";" + tmDevice);
+//        Webv.getSettings().setUserAgentString(userAgent.toString());
+
+
+            //String androID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID); //안드로이드 device id 추출
+
+            SharedPreferences sf = getSharedPreferences(sfName, 0);
+            EtID.setText(sf.getString("name", ""));
+            //EtPW.setText(sf.getString("passwd", ""));
+
+
+
+            Webv.loadUrl(domain);
+            Webv.setWebViewClient(new WebViewClient() {
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+
+            BtnLogin.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    UserID = EtID.getText().toString(); // EtPw에 입력한 텍스트를 ID에 넣음
+                    UserPW = EtPW.getText().toString(); // EtPW에 입력한 텍스트를 PW에 넣음
+                    new Login().execute(); //로그인 함수 호출
+                }
+            });
+
+            BtnLogout.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    Webv.clearHistory();
+                    Webv.clearCache(true);
+                    Webv.clearView();
+
+                    cookieSyncManager = CookieSyncManager.getInstance();
+                    cookieManager = CookieManager.getInstance();
+                    cookieManager.setAcceptCookie(true);
+                    cookieManager.removeSessionCookie();
+                    cookieSyncManager.sync();
+
+                    Webv.reload();
+                }
+            });
+        }
+
+        else{ //네트워크 연결 실패
+
+            // 비행기모드 체크 - 이부분 다시 정리
+//            if (Settings.System.getInt(getApplication().getContentResolver(),
+//                    Settings.System.AIRPLANE_MODE_ON, 0) == 1) {
+//                Toast.makeText(getApplicationContext(), "비행기모드 ON", Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(getApplicationContext(), "비행기모드 OFF", Toast.LENGTH_LONG).show();
+//            }
+
+            Log.d("NETWORK", "FAIL TO CONNECT");
+            alertDialogBuilder
+                    .setMessage("NO NETWORK")
+                    .setCancelable(false)
+                    .setPositiveButton("FINISH",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    Log.d("NETWORK", "FINISH");
+                                    dialog.cancel();
+                                    finish();
+                                }
+                            })
+                    .setNegativeButton("TRY AGAIN",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    Log.d("NETWORK", "TRY AGAIN");
+                                    dialog.cancel();
+                                    onRestart();
+                                }
+                            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+
+        }
 
     }
 
@@ -312,4 +364,23 @@ public class LoginExActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isOnline() { // network 연결 상태 확인
+        try {
+            ConnectivityManager manager =
+                    (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mobile = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            NetworkInfo wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (mobile.isConnected() || wifi.isConnected()){
+                Log.d("NETWORK", "Network connect success");
+                return true;
+            }else{
+                Log.d("NETWORK", "Network connect fail");
+                return false;
+            }
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
