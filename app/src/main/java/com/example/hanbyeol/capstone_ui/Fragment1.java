@@ -39,7 +39,7 @@ public class Fragment1 extends Fragment {
         //make Fragments as number of categories
 
         Vector<Fragment1_> vector = new Vector<Fragment1_>(5);
-        adapter = new Adapter(getFragmentManager());
+        adapter = new Adapter(getChildFragmentManager());
         Bundle extra = getArguments();
         String[] url = extra.getStringArray("url");
         String[] title = extra.getStringArray("title");

@@ -1,6 +1,8 @@
 package com.example.hanbyeol.capstone_ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -65,7 +68,38 @@ public class MainActivity extends AppCompatActivity
 
         //tabLayout_bottom = (TabLayout) findViewById(R.id.main_tabs_bottom);
         //TabLayoutBottomEvent();
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+        Toast.makeText(context, NetworkUtil.getConnectivityStatusString(context), Toast.LENGTH_LONG).show();
+        if(!NetworkUtil.possible){
+            alertDialogBuilder
+                    .setMessage("네트워크 장애로 인해 앱을 실행할 수 없습니다.")
+                    .setCancelable(false)
+                    .setPositiveButton("다시 시도",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    // 프로그램을 종료한다
+                                    dialog.cancel();
+                                    recreate();
 
+                                }
+                            })
+                    .setNegativeButton("종료",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(
+                                        DialogInterface dialog, int id) {
+                                    // 다이얼로그를 취소한다
+
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // 다이얼로그 보여주기
+            alertDialog.show();
+
+        }
         new ReadJSONFeed().execute("http://itaxi.handong.edu/init.php");
 
     }
