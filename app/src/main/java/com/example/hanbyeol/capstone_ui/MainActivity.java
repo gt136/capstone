@@ -53,9 +53,10 @@ public class MainActivity extends AppCompatActivity
         viewPager = (CustomViewPager) findViewById(R.id.fragment_part_test);
         //Tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+
         setSupportActionBar(toolbar);
         //toolbar.setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         //Navigation Drawer
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
