@@ -33,8 +33,7 @@ public class Fragment1_ extends Fragment {
         Log.d("userAgent",userAgent);
         mWebView = (WebView) view.findViewById(R.id.frag1_webview);
         mWebSettings = mWebView.getSettings();
-        mWebView.setBackgroundColor(0x00000000);
-        mWebView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+
 
         String userAgent2 = mWebSettings.getUserAgentString();
         Log.d("userAgent2",userAgent2);
