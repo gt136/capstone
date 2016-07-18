@@ -2,30 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/shopping_basket"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_menu_camera" />
-
-    <item
-        android:id="@+id/action_1"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_menu_camera" />
-
-    <item
-        android:id="@+id/action_2"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_menu_camera" />
-
-    <item
-        android:id="@+id/action_3"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never"
-        android:icon="@drawable/ic_menu_camera" />
+        android:title="Shopping Basket"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/shopping_cart" />
 </menu>

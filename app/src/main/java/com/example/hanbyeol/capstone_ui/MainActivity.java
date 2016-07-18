@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.apache.http.HttpEntity;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         //Tool bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         //toolbar.setDisplayHomeAsUpEnabled(true);
 
         //Navigation Drawer
@@ -248,6 +251,25 @@ public class MainActivity extends AppCompatActivity
             viewPager.setAdapter(adapter);
             Log.d("test", "in fragment1, 3");
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent intent;
+
+        if (id == R.id.shopping_basket) {
+            intent = new Intent(this, UrlActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
