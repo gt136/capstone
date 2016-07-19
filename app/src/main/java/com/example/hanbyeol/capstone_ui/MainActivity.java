@@ -45,6 +45,11 @@ public class MainActivity extends AppCompatActivity
     CustomViewPager viewPager;
     Context context;
 
+    Fragment1 frag1 = new Fragment1();
+    Fragment2 frag2 = new Fragment2();
+    Fragment3 frag3 = new Fragment3();
+    Fragment4 frag4 = new Fragment4();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,21 +132,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Intent intent;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        FragmentTransaction fragTran = getSupportFragmentManager().beginTransaction();
 
         if (id == R.id.nav_home) {
             //intent = new Intent(this, MainActivity.class);
             // startActivity(intent);
             drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_url) {
-            //intent = new Intent(this, UrlActivity.class);
-            //startActivity(intent);
-            //overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
-
             Fragment3 test = new Fragment3();
-            FragmentTransaction fragTran = getSupportFragmentManager().beginTransaction();
+            fragTran.setCustomAnimations(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
             fragTran.replace(R.id.app_bar_main, test);
             fragTran.addToBackStack(null);
-            fragTran.setCustomAnimations(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
             fragTran.commit();
 
         } else if (id == R.id.nav_fragment_test) {
@@ -163,12 +164,17 @@ public class MainActivity extends AppCompatActivity
         }
 
         drawer.closeDrawer(GravityCompat.START);
+
+        fragTran.hide(frag1);
+        fragTran.hide(frag2);
+        fragTran.hide(frag3);
+        fragTran.hide(frag4);
+
         return true;
     }
 
     private class ReadJSONFeed extends AsyncTask<String, String, String> {
         protected void onPreExecute() {}
-        Fragment1 frag1;
         Vector<String> vector = new Vector<String>(3);
         Vector<String> vector2 = new Vector<String>(3);
         @Override
@@ -239,7 +245,6 @@ public class MainActivity extends AppCompatActivity
 
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            frag1 = new Fragment1();
             Bundle bundle = new Bundle();
 
             String[] title = new String[vector.size()];
@@ -250,9 +255,6 @@ public class MainActivity extends AppCompatActivity
             bundle.putStringArray("title",title);
             bundle.putStringArray("url",url);
             frag1.setArguments(bundle);
-            Fragment2 frag2 = new Fragment2();
-            Fragment3 frag3 = new Fragment3();
-            Fragment4 frag4 = new Fragment4();
 
             switch (tabPosition) {
                 case 0 :

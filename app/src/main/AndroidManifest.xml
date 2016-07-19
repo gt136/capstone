@@ -28,18 +28,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Fragment1"
-            android:label="@string/title_activity_fragment1"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Fragment2"
-            android:label="@string/title_activity_fragment2"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Fragment3"
-            android:label="@string/title_activity_fragment3"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".WebViewActivity"
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -47,12 +35,7 @@
             android:name=".LoginExActivity"
             android:label="@string/title_activity_login_ex" />
         <activity android:name=".UrlActivity" />
-        <activity
-            android:name=".Fragment1_"
-            android:label="@string/title_activity_fragment1_"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".FragTestActivity" />
-        <activity android:name=".WebViewFragment" />
         <activity android:name=".Login" />
         <activity android:name=".LoginWebView" />
 
