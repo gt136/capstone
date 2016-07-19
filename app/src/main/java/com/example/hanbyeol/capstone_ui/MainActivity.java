@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                     vector.addElement(jObject.getString("title"));
                     vector2.addElement(jObject.getString("url"));
                 }
-                setupViewPager((ViewPager)viewPager);
+                setupViewPager(viewPager);
                 viewPager.setOffscreenPageLimit(6);
                 tabLayout_bottom.setupWithViewPager(viewPager);
 
