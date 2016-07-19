@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setLogo(R.mipmap.cconma_launcher);
         //toolbar.setDisplayHomeAsUpEnabled(true);
 
         //Navigation Drawer
@@ -91,9 +92,17 @@ public class MainActivity extends AppCompatActivity
             // startActivity(intent);
             drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_url) {
-            intent = new Intent(this, UrlActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+            //intent = new Intent(this, UrlActivity.class);
+            //startActivity(intent);
+            //overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+
+            Fragment3 test = new Fragment3();
+            FragmentTransaction fragTran = getSupportFragmentManager().beginTransaction();
+            fragTran.replace(R.id.app_bar_main, test);
+            fragTran.addToBackStack(null);
+            fragTran.setCustomAnimations(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+            fragTran.commit();
+
         } else if (id == R.id.nav_fragment_test) {
             intent = new Intent(this, FragTestActivity.class);
             startActivity(intent);
@@ -108,6 +117,7 @@ public class MainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
         }
 
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 

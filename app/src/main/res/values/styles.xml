@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"></style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light"></style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -11,6 +11,12 @@
     <style name="Theme.MyTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/black_overlay</item>
+        <item name="drawerArrowStyle">@style/toggle</item>
+    </style>
+
+    <style name="toggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/black_overlay</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

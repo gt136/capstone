@@ -46,11 +46,13 @@ public class FragTestActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        FragTestActivity.this.finish();
-        overridePendingTransition(R.anim.anim_hold, R.anim.anim_slide_out_to_right);
-
-        return false;
+    public void onBackPressed() {
+        if(mWebView.canGoBack())
+            mWebView.goBack();
+        else {
+            super.onBackPressed();
+            overridePendingTransition(R.anim.anim_hold, R.anim.anim_slide_out_to_right);
+        }
     }
 
 }
