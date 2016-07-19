@@ -1,16 +1,23 @@
 package com.example.hanbyeol.capstone_ui;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import java.util.logging.LogRecord;
 
 public class WebViewFragment extends Fragment {
 
@@ -18,10 +25,15 @@ public class WebViewFragment extends Fragment {
     private WebView mWebView;
     private WebSettings mWebSettings;
 
-    private WebViewFragment(){ }
-    public WebViewFragment(String url){
-        curURL = url;
-    }
+    //public WebViewFragment(){ }
+    //public WebViewFragment(String url){
+       // curURL = url;
+    //}
+
+    private static final int CLICK_ON_WEBVIEW = 1;
+    private static final int CLICK_ON_URL = 2;
+
+    private final Handler handler = new Handler((Handler.Callback) this);
 
     @Nullable
     @Override
@@ -46,10 +58,29 @@ public class WebViewFragment extends Fragment {
         return view;
     }
 
+
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v.getId() == R.id.webviewFrag_webview && event.getAction() == MotionEvent.ACTION_DOWN){
+            handler.sendEmptyMessageDelayed(CLICK_ON_WEBVIEW, 500);
+        }
+        return false;
+    }
+
+    public boolean handleMessage(Message msg) {
+        if (msg.what == CLICK_ON_URL){
+            handler.removeMessages(CLICK_ON_WEBVIEW);
+            return true;
+        }
+        if (msg.what == CLICK_ON_WEBVIEW){
+            Toast.makeText(WebViewFragment.this.getContext(), "Webview clicked", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
     public class MyWebClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url){
             view.loadUrl(url);
-            Log.d("test", "before catch");
             Log.d("URL_CATCH", url);
 
             return super.shouldOverrideUrlLoading(view, url);

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +43,32 @@ public class Fragment1_ extends Fragment {
         mWebSettings.setUseWideViewPort(true);
         mWebSettings.setLoadWithOverviewMode(true);
         mWebSettings.setSaveFormData(false);
+        mWebSettings.setJavaScriptEnabled(true);
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         // mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-mWebSettings.setJavaScriptEnabled(true);
 
        
         mWebView.setWebViewClient(new MyWebClient());
         final Context myApp = this.getContext();
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //This is the filter
+                if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                    return true;
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (mWebView.canGoBack()) {
+                        mWebView.goBack();
+                    } else {
+                        ((MainActivity)getActivity()).onBackPressed();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
+        mWebView.setWebViewClient(new MyWebClient());
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result) {
@@ -65,6 +84,30 @@ mWebSettings.setJavaScriptEnabled(true);
                         .setCancelable(false)
                         .create()
                         .show();
+                return true;
+            }
+
+            public boolean onJsConfirm(WebView view, String url,
+                                       String message, final android.webkit.JsResult result) {
+                new AlertDialog.Builder(myApp)
+                        .setTitle("Concierge")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok,
+                                new AlertDialog.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        result.confirm();
+                                    }
+                                })
+                        .setNegativeButton(android.R.string.cancel,
+                                new AlertDialog.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog,
+                                            int which) {
+                                        result.cancel();
+                                    }
+                                }).setCancelable(false).create().show();
                 return true;
             }
         });
@@ -102,12 +145,12 @@ mWebSettings.setJavaScriptEnabled(true);
             mWebView.loadUrl(curURL);
             Log.d("temp2:", curURL);
         }*/
-            //mWebView.addJavascriptInterface(new AndroidBridge(), "androidBridge");
+        //mWebView.addJavascriptInterface(new AndroidBridge(), "androidBridge");
 
-            return view;
-        }
+        return view;
+    }
 
-        @Override
+    @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         mWebView.saveState(outState);

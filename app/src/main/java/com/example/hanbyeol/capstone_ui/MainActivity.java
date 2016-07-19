@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     Adapter adapter;
     CustomViewPager viewPager;
     Context context;
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setLogo(R.mipmap.cconma_launcher);
         //toolbar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //Navigation Drawer
@@ -128,9 +133,17 @@ public class MainActivity extends AppCompatActivity
             // startActivity(intent);
             drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_url) {
-            intent = new Intent(this, UrlActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+            //intent = new Intent(this, UrlActivity.class);
+            //startActivity(intent);
+            //overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+
+            Fragment3 test = new Fragment3();
+            FragmentTransaction fragTran = getSupportFragmentManager().beginTransaction();
+            fragTran.replace(R.id.app_bar_main, test);
+            fragTran.addToBackStack(null);
+            fragTran.setCustomAnimations(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+            fragTran.commit();
+
         } else if (id == R.id.nav_fragment_test) {
             intent = new Intent(this, FragTestActivity.class);
             startActivity(intent);
@@ -149,6 +162,7 @@ public class MainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
         }
 
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -242,13 +256,9 @@ public class MainActivity extends AppCompatActivity
 
             switch (tabPosition) {
                 case 0 :
-                    Log.d("test", "1");
                     ft.replace(R.id.fragment_part_test, frag1);
-                    Log.d("test", "2");
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    Log.d("test", "3");
                     ft.commit();
-                    Log.d("test", "4");
                     break;
                 case 1 :
                     ft.replace(R.id.fragment_part_test, frag2);
@@ -273,7 +283,6 @@ public class MainActivity extends AppCompatActivity
             //get information about tabs from server
             //make Fragments as number of categories
 
-
             adapter = new Adapter(getSupportFragmentManager());
             frag1 = new Fragment1();
             Bundle bundle = new Bundle();
@@ -297,6 +306,25 @@ public class MainActivity extends AppCompatActivity
             viewPager.setAdapter(adapter);
             Log.d("test", "in fragment1, 3");
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent intent;
+
+        if (id == R.id.shopping_basket) {
+            intent = new Intent(this, UrlActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
