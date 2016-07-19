@@ -3,8 +3,6 @@ package com.example.hanbyeol.capstone_ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,13 +70,13 @@ public class Fragment2 extends Fragment {
             //set new fragment.
             Log.d("in activity", "test() is working");
 
-            WebViewFragment change = new WebViewFragment(url);
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.addToBackStack(null);
-            ft.replace(R.id.frag2_replace, change);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
+           // WebViewFragment change = new WebViewFragment(url);
+           // FragmentManager fm = getActivity().getSupportFragmentManager();
+           // FragmentTransaction ft = fm.beginTransaction();
+           // ft.addToBackStack(null);
+           // ft.replace(R.id.frag2_replace, change);
+           // ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+           // ft.commit();
 
             //change in current mode- not working
             //curURL = "file:///android_asset/webView2.html";

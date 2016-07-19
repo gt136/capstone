@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
     Adapter adapter;
     CustomViewPager viewPager;
     Context context;
-    ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,8 +156,8 @@ public class MainActivity extends AppCompatActivity
             intent = new Intent(this, WebViewActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
-        }else if (id == R.id.app_login) {
-            intent = new Intent(this, Login.class);
+        }else if (id ==R.id.nav_login) {
+            intent = new Intent(this,Login.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
         }
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                     vector.addElement(jObject.getString("title"));
                     vector2.addElement(jObject.getString("url"));
                 }
-                setupViewPager(viewPager);
+                setupViewPager((ViewPager)viewPager);
                 viewPager.setOffscreenPageLimit(6);
                 tabLayout_bottom.setupWithViewPager(viewPager);
 
