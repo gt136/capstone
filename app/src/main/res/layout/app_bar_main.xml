@@ -38,7 +38,7 @@
 
         <com.example.hanbyeol.capstone_ui.CustomViewPager
 
-        android:id="@+id/fragment_part_test"
+            android:id="@+id/fragment_part_test"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="?attr/actionBarSize"

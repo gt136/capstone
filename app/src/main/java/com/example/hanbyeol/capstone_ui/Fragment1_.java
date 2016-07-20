@@ -15,6 +15,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 public class Fragment1_ extends Fragment {
 
@@ -137,63 +138,50 @@ public class Fragment1_ extends Fragment {
                 switch (errorCode) {
 
                     case ERROR_AUTHENTICATION:               // 서버에서 사용자 인증 실패
-
+                        Toast.makeText(myApp,"사용자인증실패", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_BAD_URL:                            // 잘못된 URL
-
+                        Toast.makeText(myApp,"잘못된URL", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_CONNECT:                           // 서버로 연결 실패
-
+                        Toast.makeText(myApp,"서버로 연결 실패", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_FAILED_SSL_HANDSHAKE:     // SSL handshake 수행 실패
-
+                        Toast.makeText(myApp," SSL handshake 수행 실패", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_FILE:                                   // 일반 파일 오류
-
+                        Toast.makeText(myApp,"일반 파일 오류", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_FILE_NOT_FOUND:                // 파일을 찾을 수 없습니다
-
+                        Toast.makeText(myApp,"파일을 찾을 수 없습니다", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_HOST_LOOKUP:            // 서버 또는 프록시 호스트 이름 조회 실패
-
+                        Toast.makeText(myApp,"서버 또는 프록시 호스트 이름 조회 실패", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_IO:                               // 서버에서 읽거나 서버로 쓰기 실패
-
+                        Toast.makeText(myApp,"서버에서 읽거나 서버로 쓰기 실패", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_PROXY_AUTHENTICATION:    // 프록시에서 사용자 인증 실패
-
+                        Toast.makeText(myApp,"프록시에서 사용자 인증 실패", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_REDIRECT_LOOP:                // 너무 많은 리디렉션
-
+                        Toast.makeText(myApp," 너무 많은 리디렉션", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_TIMEOUT:                          // 연결 시간 초과
-
+                        Toast.makeText(myApp,"연결 시간 초과", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_TOO_MANY_REQUESTS:            // 페이지 로드중 너무 많은 요청 발생
-
+                        Toast.makeText(myApp,"페이지 로드중 너무 많은 요청 발생", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_UNKNOWN:                         // 일반 오류
-
+                        Toast.makeText(myApp,"일반 오류", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_UNSUPPORTED_AUTH_SCHEME:  // 지원되지 않는 인증 체계
-
+                        Toast.makeText(myApp,"지원되지 않는 인증 체계", Toast.LENGTH_LONG).show();
+                        break;
                     case ERROR_UNSUPPORTED_SCHEME:
-                        final android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(myApp);
-
-
-                            alertDialogBuilder
-                                    .setMessage("네트워크 장애로 인해 앱을 실행할 수 없습니다.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("다시 시도",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(
-                                                        DialogInterface dialog, int id) {
-                                                    // 프로그램을 종료한다
-                                                    dialog.cancel();
-
-
-                                                }
-                                            })
-                                    .setNegativeButton("종료",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(
-                                                        DialogInterface dialog, int id) {
-                                                    // 다이얼로그를 취소한다
-
-                                                    dialog.cancel();
-                                                }
-                                            });
-                            android.app.AlertDialog alertDialog = alertDialogBuilder.create();
-
-                            // 다이얼로그 보여주기
-                            alertDialog.show();
+                        Toast.makeText(myApp,"ERROR_UNSUPPORTED_SCHEME", Toast.LENGTH_LONG).show();
+                        break;
 
 
                 }

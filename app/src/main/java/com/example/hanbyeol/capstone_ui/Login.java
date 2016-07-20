@@ -12,23 +12,8 @@ import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ymg on 2016-07-05.
@@ -46,6 +31,7 @@ public class Login extends AppCompatActivity {
     final HttpClient http = new DefaultHttpClient();
     private String name ;
     private String pass ;
+    HttpConnection httpConnection;
     /*final ResponseHandler<String> responseHandler= new ResponseHandler<String>() {
         @Override
         public String handleResponse(HttpResponse response)  throws ClientProtocolException, IOException {
@@ -61,34 +47,7 @@ public class Login extends AppCompatActivity {
         }
     };*/
 
-    final ResponseHandler<String> responseHandler= new ResponseHandler<String>() {
-        @Override
-        public String handleResponse(HttpResponse response)  throws ClientProtocolException, IOException {
-            String result = "", line;
-            HttpEntity entity=response.getEntity();
 
-
-                List<Cookie> cookies = ((DefaultHttpClient)http).getCookieStore().getCookies();
-                if (!cookies.isEmpty()) {
-                    for (int i = 0; i < cookies.size(); i++) {
-                        String cookieString = cookies.get(i).getName() + "=" + cookies.get(i).getValue();
-                        cookieManager.setCookie(url2, cookieString);
-                        Log.d("cookie", cookieString);
-                    }
-                }
-                CookieSyncManager.getInstance().sync();
-                try {
-                    Thread.sleep(500);  //동기화 하는데 약간의 시간을 필요로 한다.
-                } catch (InterruptedException e) {   }
-
-                //Intent intent = new Intent(Login.this, LoginWebView.class);
-                //startActivity(intent);
-                finish();
-
-
-            return "";
-        }
-    };
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,26 +79,21 @@ public class Login extends AppCompatActivity {
                 pass = editTextPass.getText().toString();
                 Log.d("click_name",name);
                 Log.d("click_pass",pass);
+                httpConnection = new HttpConnection(name,pass,url,url2);
                 new Thread() {
                     @Override
                     public void run() {
-                        try {
-                            // 서버에 전달할 파라메터 세팅
-                            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                            nameValuePairs.add(new BasicNameValuePair("id", name));
-                            nameValuePairs.add(new BasicNameValuePair("passwd", pass));
-                            Log.d("cookie_name", name);
-                            Log.d("cookie_pass", pass);
-                            HttpParams params = http.getParams();
-                            HttpConnectionParams.setConnectionTimeout(params, 5000);
-                            HttpConnectionParams.setSoTimeout(params, 5000);
-                            HttpPost httpPost = new HttpPost(url);
-                            UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-                            httpPost.setEntity(entityRequest);
-                            http.execute(httpPost,responseHandler);
-                        }catch(Exception e){}
+                     httpConnection.setLogin();
                     }
                 }.start();
+                CookieSyncManager.getInstance().sync();
+                try {
+                    Thread.sleep(500);  //동기화 하는데 약간의 시간을 필요로 한다.
+                } catch (InterruptedException e) {   }
+
+                //Intent intent = new Intent(Login.this, LoginWebView.class);
+                //startActivity(intent);
+                finish();
             }
         });
 btnLogout.setOnClickListener(new Button.OnClickListener() {

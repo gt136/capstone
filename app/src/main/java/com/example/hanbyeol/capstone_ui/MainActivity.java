@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -21,19 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity
@@ -179,26 +169,8 @@ public class MainActivity extends AppCompatActivity
         Vector<String> vector2 = new Vector<String>(3);
         @Override
         protected String doInBackground(String... urls) {
-            HttpClient httpclient = new DefaultHttpClient();
-            StringBuilder builder = new StringBuilder();
-            HttpPost httppost = new HttpPost(urls[0]);
-            try {
-                HttpResponse response = httpclient.execute(httppost);
-                StatusLine statusLine = response.getStatusLine();
-                int statusCode = statusLine.getStatusCode();
-                if (statusCode == 200) {
-                    HttpEntity entity = response.getEntity();
-                    InputStream content = entity.getContent();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return builder.toString();
+HttpConnection httpConnection = new HttpConnection();
+            return httpConnection.getContent(urls[0]);
         }
 
         protected void onPostExecute(String result) {
@@ -226,7 +198,7 @@ public class MainActivity extends AppCompatActivity
             }
 
         }
-        private void TabLayoutBottomEvent() {
+       /* private void TabLayoutBottomEvent() {
             tabLayout_bottom.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
@@ -239,9 +211,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) { }
             });
-        }
+        }*/
 
-        private void setCurrentTabFragment(int tabPosition) {
+       /* private void setCurrentTabFragment(int tabPosition) {
 
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
@@ -280,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                 default:
                     break;
             }
-        }
+        }*/
         private void setupViewPager(ViewPager viewPager) {
             //get information about tabs from server
             //make Fragments as number of categories
