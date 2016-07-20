@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     Adapter adapter;
     CustomViewPager viewPager;
     Context context;
+    Toolbar toolbar;
 
     Fragment1 frag1 = new Fragment1();
     Fragment2 frag2 = new Fragment2();
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 
         viewPager = (CustomViewPager) findViewById(R.id.fragment_part_test);
         //Tool bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.main_toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -134,6 +135,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         FragmentTransaction fragTran = getSupportFragmentManager().beginTransaction();
 
+
+
         if (id == R.id.nav_home) {
             //intent = new Intent(this, MainActivity.class);
             // startActivity(intent);
@@ -144,15 +147,22 @@ public class MainActivity extends AppCompatActivity
             fragTran.replace(R.id.app_bar_main, test);
             fragTran.addToBackStack(null);
             fragTran.commit();
-
         } else if (id == R.id.nav_fragment_test) {
             intent = new Intent(this, FragTestActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
         } else if (id == R.id.nav_login_ex) {
-            intent = new Intent(this, LoginExActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+            LoginFragment loginFrag = new LoginFragment();
+            fragTran.setCustomAnimations(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+            fragTran.replace(R.id.app_bar_main, loginFrag);
+            fragTran.addToBackStack(null);
+            fragTran.commit();
+
+//            fragTran.hide(frag1);
+//            fragTran.hide(frag2);
+//            fragTran.hide(frag3);
+//            fragTran.hide(frag4);
+
         } else if (id == R.id.nav_webview) {
             intent = new Intent(this, WebViewActivity.class);
             startActivity(intent);
@@ -164,12 +174,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         drawer.closeDrawer(GravityCompat.START);
-
-        fragTran.hide(frag1);
-        fragTran.hide(frag2);
-        fragTran.hide(frag3);
-        fragTran.hide(frag4);
-
         return true;
     }
 
