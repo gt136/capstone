@@ -120,6 +120,7 @@ public class Fragment1_ extends Fragment {
         Bundle extra = getArguments();
         String url = extra.getString("url");
         mWebView.loadUrl(url);
+
         mWebView.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -204,6 +205,7 @@ public class Fragment1_ extends Fragment {
 
 
                 }
+                mWebView.stopLoading();
             }
         });
             ;
