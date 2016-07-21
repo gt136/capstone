@@ -16,6 +16,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class Fragment1_ extends Fragment {
@@ -23,7 +24,7 @@ public class Fragment1_ extends Fragment {
     private String curURL;
     private WebView mWebView;
     private WebSettings mWebSettings;
-
+    private ProgressBar progress;
     public Fragment1_() {}
 
     @Nullable
@@ -32,7 +33,7 @@ public class Fragment1_ extends Fragment {
 
         View view = inflater.inflate(R.layout.content_fragment1_, container, false);
         String userAgent = System.getProperty("http.agent");
-
+        progress = (ProgressBar) view.findViewById(R.id.web_progress);
         Log.d("userAgent",userAgent);
         mWebView = (WebView) view.findViewById(R.id.frag1_webview);
         mWebSettings = mWebView.getSettings();
@@ -145,11 +146,11 @@ public class Fragment1_ extends Fragment {
           public void onPageStarted(WebView view, String url,
                                       android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon); //페이지 로딩 시작
-                CLoading.showLoading(myApp);
+              progress.setVisibility(View.VISIBLE);
             };
             public void onPageFinished(WebView view, String url) { //페이지 로딩 완료
                 super.onPageFinished(view, url);
-                CLoading.hideLoading();
+                progress.setVisibility(View.GONE);
             };
             public void onReceivedError(WebView view, int errorCode,String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);

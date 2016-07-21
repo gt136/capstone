@@ -7,15 +7,17 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 public class PopUpWebview extends AppCompatActivity {
 
     WebView mWebView;
-
+    private ProgressBar progress;
     private WebSettings mWebSettings;
 
     @Override
@@ -27,7 +29,7 @@ public class PopUpWebview extends AppCompatActivity {
         mWebView = (WebView) findViewById(R.id.popup_webview);
         mWebSettings = mWebView.getSettings();
 
-
+        progress = (ProgressBar) findViewById(R.id.web_progress);
         String userAgent2 = mWebSettings.getUserAgentString();
         Log.d("userAgent2", userAgent2);
         mWebSettings.setBuiltInZoomControls(true);
@@ -108,11 +110,11 @@ public class PopUpWebview extends AppCompatActivity {
             public void onPageStarted(WebView view, String url,
                                       android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon); //페이지 로딩 시작
-                CLoading.showLoading(myApp);
+                progress.setVisibility(View.VISIBLE);
             };
             public void onPageFinished(WebView view, String url) { //페이지 로딩 완료
                 super.onPageFinished(view, url);
-                CLoading.hideLoading();
+                progress.setVisibility(View.GONE);
             };
         });
          /*   public void onPageStarted(WebView view, String url,
