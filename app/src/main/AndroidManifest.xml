@@ -38,6 +38,7 @@
         <activity android:name=".FragTestActivity" />
         <activity android:name=".Login" />
         <activity android:name=".LoginWebView" />
+        <activity android:name=".PopUpWebview" />
 
     </application>
 

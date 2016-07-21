@@ -4,42 +4,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
-public class Fragment1_ extends Fragment {
+public class PopUpWebview extends AppCompatActivity {
 
-    private String curURL;
-    private WebView mWebView;
+    WebView mWebView;
+
     private WebSettings mWebSettings;
 
-    public Fragment1_() {}
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.content_fragment1_, container, false);
-        String userAgent = System.getProperty("http.agent");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_popup_web_view);
 
-        Log.d("userAgent",userAgent);
-        mWebView = (WebView) view.findViewById(R.id.frag1_webview);
+        mWebView = (WebView) findViewById(R.id.popup_webview);
         mWebSettings = mWebView.getSettings();
 
 
         String userAgent2 = mWebSettings.getUserAgentString();
-        Log.d("userAgent2",userAgent2);
+        Log.d("userAgent2", userAgent2);
         mWebSettings.setBuiltInZoomControls(true);
         mWebSettings.setSupportZoom(true);
         mWebSettings.setUseWideViewPort(true);
@@ -49,26 +39,10 @@ public class Fragment1_ extends Fragment {
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         // mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
-       
+
         mWebView.setWebViewClient(new MyWebClient());
-        final Context myApp = this.getContext();
-        mWebView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                //This is the filter
-                if (event.getAction()!=KeyEvent.ACTION_DOWN)
-                    return true;
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if (mWebView.canGoBack()) {
-                        mWebView.goBack();
-                    } else {
-                        ((MainActivity)getActivity()).onBackPressed();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
+        final Context myApp = this;
+
 
         mWebView.setWebViewClient(new MyWebClient());
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -115,34 +89,33 @@ public class Fragment1_ extends Fragment {
         });
 
         Log.d("test", "in fragment1_");
-
-        Bundle extra = getArguments();
-        String url = extra.getString("url");
+        Intent intent = getIntent();
+        String url = intent.getStringExtra("url");
         mWebView.loadUrl(url);
         mWebView.setWebViewClient(new WebViewClient() {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d("URL_CATCH", url);
-                Intent intent1 = new Intent(getActivity(), PopUpWebview.class);
+                Intent intent1 = new Intent(myApp,PopUpWebview.class);
                 intent1.putExtra("url",url);
                 startActivity(intent1);
-                getActivity().overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
-                Log.d("되나","되라");
+                overridePendingTransition(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
+                Log.d("되나", "되라");
                 return true;
-                /*FragmentTransaction fragTran = getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment1_ test = new Fragment1_();
-                Bundle bundle = new Bundle();
-                bundle.putString("url", url);
-                test.setArguments(bundle);
-                fragTran.setCustomAnimations(R.anim.anim_slide_in_from_right, R.anim.anim_hold);
-                Log.d("이쪽",url);
-                fragTran.replace(R.id.app_bar_main, test);
-                fragTran.addToBackStack(null);
-                fragTran.commit();
-                return true;*/
+
             }
-          public void onPageStarted(WebView view, String url,
+            public void onPageStarted(WebView view, String url,
+                                      android.graphics.Bitmap favicon) {
+                super.onPageStarted(view, url, favicon); //페이지 로딩 시작
+                CLoading.showLoading(myApp);
+            };
+            public void onPageFinished(WebView view, String url) { //페이지 로딩 완료
+                super.onPageFinished(view, url);
+                CLoading.hideLoading();
+            };
+        });
+         /*   public void onPageStarted(WebView view, String url,
                                       android.graphics.Bitmap favicon) {
                 super.onPageStarted(view, url, favicon); //페이지 로딩 시작
                 CLoading.showLoading(myApp);
@@ -156,7 +129,7 @@ public class Fragment1_ extends Fragment {
                 switch (errorCode) {
 
                     case ERROR_AUTHENTICATION:               // 서버에서 사용자 인증 실패
-                        Toast.makeText(myApp, "사용자인증실패", Toast.LENGTH_LONG).show();
+                        Toast.makeText(myApp,"사용자인증실패", Toast.LENGTH_LONG).show();
                         break;
                     case ERROR_BAD_URL:                            // 잘못된 URL
                         Toast.makeText(myApp,"잘못된URL", Toast.LENGTH_LONG).show();
@@ -203,26 +176,10 @@ public class Fragment1_ extends Fragment {
 
 
                 }
-            }
-        });
-            ;
+            }*/
 
-        /*if(savedInstanceState == null){
-            mWebView.setWebViewClient(new MyWebClient());
-            mWebSettings.setJavaScriptEnabled(true);
-            mWebView.loadUrl(curURL);
-            Log.d("temp:",curURL);
-        } else {
-            mWebView.restoreState(savedInstanceState);
-            mWebView.loadUrl(curURL);
-            Log.d("temp2:", curURL);
-        }*/
-        //mWebView.addJavascriptInterface(new AndroidBridge(), "androidBridge");
 
-        return view;
     }
-
-    @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
         mWebView.saveState(outState);
@@ -236,6 +193,6 @@ public class Fragment1_ extends Fragment {
             //return super.shouldOverrideUrlLoading(view, url);
             return true;
         }
-    }
 
+    }
 }
