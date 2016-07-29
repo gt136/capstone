@@ -98,4 +98,10 @@ public class WebViewActivity extends AppCompatActivity {
         InsertData task = new InsertData();
         task.execute(name, address);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_hold, R.anim.anim_slide_out_to_right);
+    }
 }
